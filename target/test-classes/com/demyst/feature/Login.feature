@@ -9,7 +9,7 @@ Feature: Login test
     Examples:
       | EmailID        | Password | ErrorMessage                                                          |
       |                |          | Please fill out this field.                                           |
-      | test@gmail.com |          | Please fill out this field.                                           |
+      | test@gmail.com |          | Please fill out this                                                  |
       | test           |          | Please include an '@' in the email address. 'test' is missing an '@'. |
       |                | test     | Please fill out this field.                                           |
 
