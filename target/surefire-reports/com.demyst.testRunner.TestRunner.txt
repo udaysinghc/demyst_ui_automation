@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.demyst.testRunner.TestRunner
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 52.144 s <<< FAILURE! - in com.demyst.testRunner.TestRunner
+Login test.Verify HTML5 validation for invalid data #2  Time elapsed: 8.679 s  <<< FAILURE!
+org.junit.ComparisonFailure: expected:<Please fill out this[].> but was:<Please fill out this[ field].>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.demyst.pages.LoginPage.verifyMessage(LoginPage.java:66)
+	at com.demyst.stepDefinations.LoginPageSteps.verifyTheErrorMessage(LoginPageSteps.java:44)
+	at ✽.verify the error message "Please fill out this."(file:///C:/Users/Admin/Documents/ui_demyst_automation/./src/test/java/com/demyst/feature/Login.feature:8)
+
