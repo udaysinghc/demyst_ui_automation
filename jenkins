@@ -10,21 +10,35 @@ pipeline {
         maven "maven"
     }
 
-     parameters {
+    parameters {
         string(name: 'CUCUMBER_TAGS', defaultValue: '', description: 'Cucumber tags for test execution')
     }
-    stages {
 
-        stage('Build and Run') {
+    stages {
+        stage('Checkout Code') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'master']], userRemoteConfigs: [[url: 'https://github.com/udaysinghc/ui_taygo_automation.git']]])
-             bat "mvn clean install -Dcucumber.filter.tags=${params.CUCUMBER_TAGS}"
+                checkout([$class: 'GitSCM', branches: [[name: 'master']],
+                          userRemoteConfigs: [[url: 'https://github.com/udaysinghc/demyst_ui_automation.git']]])
             }
         }
 
-        stage('Generate Cucumber Report') {
+        stage('Build and Run Tests') {
             steps {
                 script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                        bat "mvn clean install -Dcucumber.filter.tags=${params.CUCUMBER_TAGS}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                def reportPath = '**/target/cucumber/cucumber.json' // Adjust if needed
+                if (fileExists('target/cucumber/cucumber.json')) {
+                    echo "Cucumber JSON report found. Generating reports..."
                     cucumberReports(
                         buildStatus: 'UNCHANGED',
                         customCssFiles: '',
@@ -32,37 +46,21 @@ pipeline {
                         failedFeaturesNumber: -1,
                         failedScenariosNumber: -1,
                         failedStepsNumber: -1,
-                        fileIncludePattern: '**/target/cucumber/cucumber.json',
+                        fileIncludePattern: reportPath,
                         pendingStepsNumber: -1,
                         skippedStepsNumber: -1,
                         sortingMethod: 'ALPHABETICAL',
                         undefinedStepsNumber: -1
                     )
+                } else {
+                    echo "Cucumber JSON report not found! Skipping report generation."
                 }
             }
         }
     }
-      post {
-            success {
-                archiveArtifacts '**/target/cucumber/cucumber.json'
-                script {
-                    def buildUrl = env.BUILD_URL
-                    def cucumberReportUrl = "${buildUrl}Report/cucumber-html-reports/overview-features.html"
-                    slackSend channel: '#automation', message: "Build successful! Cucumber Report: ${cucumberReportUrl}"
-                }
-            }
-            failure {
-                script {
-                    def buildUrl = env.BUILD_URL
-                    slackSend channel: '#automation', message: "Build failed! Jenkins Build: ${buildUrl}"
-                }
-            }
-        }
-
-
 }
 
-// Define a function to generate Cucumber reports
+// Define the function to publish Cucumber reports
 def cucumberReports(Map options) {
     step([$class: 'CucumberReportPublisher',
         buildStatus: options.buildStatus,

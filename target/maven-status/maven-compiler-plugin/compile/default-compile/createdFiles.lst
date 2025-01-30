@@ -1,8 +1,0 @@
-com\demyst\utility\ConfigReader.class
-com\demyst\utility\HighlightedWebElement.class
-com\demyst\utility\HighlightElementLocatorFactory.class
-com\demyst\pages\LoginPage.class
-com\demyst\base\ApplicationHooks.class
-com\demyst\utility\HighlightElementLocator.class
-com\demyst\base\DriverFactory.class
-com\demyst\utility\TestUtil.class

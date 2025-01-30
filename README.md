@@ -19,12 +19,20 @@ Feature: Login Functionality
 
 ## Running Tests
 
-## Via Maven Command Line:
+## Via Maven Command Line for all test cases :
 
-    mvn clean test
+    mvn clean test 
+
+## Via Maven Command Line for tag name by feature  test cases:
+    mvn  clean install "-Dcucumber.filter.tags=@non-html"
+
 
 ## Reporting
    Reports will be generated in:
 
     target/cucumber-reports
     target/surefire-reports
+## Running Tests on editor maven by tag name
+    clean install -Dcucumber.filter.tags=@non-html
+
+
